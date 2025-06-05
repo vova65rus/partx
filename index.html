@@ -1,164 +1,94 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PartX</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      background-color: #111;
-      color: #fff;
-    }
-    .top-nav, .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      padding: 10px;
-      background-color: #1a1a1a;
-    }
-    .top-nav div, .bottom-nav div {
-      text-align: center;
-      color: #aaa;
-    }
-    .top-nav div.active, .bottom-nav div.active {
-      color: #fff;
-    }
-    .search-area {
-      padding: 15px;
-    }
-    .search-area input {
-      width: 100%;
-      padding: 10px;
-      background-color: #222;
-      color: #fff;
-      border: none;
-      margin-bottom: 10px;
-    }
-    .filters {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    .filters button {
-      flex: 1;
-      padding: 10px;
-      background-color: #222;
-      color: #fff;
-      border: none;
-    }
-    .region-button, .show-button {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 10px;
-      background-color: #333;
-      color: #fff;
-      border: none;
-    }
-    .history, .recommendations {
-      padding: 0 15px;
-    }
-    .history span {
-      background: #333;
-      padding: 5px 10px;
-      border-radius: 20px;
-      margin-right: 5px;
-      font-size: 14px;
-    }
-    .recommendations h3 {
-      margin-top: 20px;
-    }
-    .item {
-      background: #1a1a1a;
-      margin-bottom: 10px;
-      padding: 10px;
-      border-radius: 10px;
-    }
-    .item img {
-      width: 100%;
-      border-radius: 10px;
-    }
-    .item p {
-      margin: 5px 0;
-    }
-  </style>
-</head>
-<body>
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Search, Settings, ListFilter, MessageSquareText, Store, Wrench } from "lucide-react";
 
-  <div class="top-nav">
-    <div class="active">
-      <i class="fas fa-cogs"></i>
-      <div>Запчасти</div>
-    </div>
-    <div>
-      <i class="fas fa-truck"></i>
-      <div>Доставка</div>
-    </div>
-    <div>
-      <i class="fas fa-store"></i>
-      <div>Магазины</div>
-    </div>
-    <div>
-      <i class="fas fa-info-circle"></i>
-      <div>Справка</div>
-    </div>
-  </div>
+export default function PartXWebApp() {
+  return (
+    <div className="w-full max-w-md mx-auto bg-black text-white min-h-screen px-4 pb-24">
+      <header className="py-4 flex justify-center items-center text-2xl font-bold text-white">
+        PartX
+      </header>
 
-  <div class="search-area">
-    <input type="text" placeholder="Номер кузова, VIN, парт-номер или модель">
-    <div class="filters">
-      <button>Категория</button>
-      <button>Цена</button>
-      <button><i class="fas fa-sliders-h"></i> Параметры</button>
-    </div>
-    <button class="region-button">Все регионы</button>
-    <button class="show-button">Показать все предложения</button>
-  </div>
+      <Tabs defaultValue="parts" className="w-full mb-4">
+        <TabsList className="grid grid-cols-4 gap-1 bg-zinc-800 rounded-xl p-1">
+          <TabsTrigger value="parts" className="flex flex-col items-center gap-1 text-xs">
+            <Wrench size={18} />
+            Запчасти
+          </TabsTrigger>
+          <TabsTrigger value="special" className="flex flex-col items-center gap-1 text-xs">
+            <Store size={18} />
+            Магазины
+          </TabsTrigger>
+          <TabsTrigger value="filters" className="flex flex-col items-center gap-1 text-xs">
+            <ListFilter size={18} />
+            Фильтры
+          </TabsTrigger>
+          <TabsTrigger value="settings" className="flex flex-col items-center gap-1 text-xs">
+            <Settings size={18} />
+            Настройки
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-  <div class="history">
-    <p>Вы искали:</p>
-    <span>Toyota Crown амортизатор</span>
-    <span>1NZ фильтр</span>
-  </div>
+      <div className="flex flex-col gap-2 mb-4">
+        <Input placeholder="Найти запчасть по названию или номеру" className="bg-zinc-900 border-none text-white placeholder-zinc-400" />
+        <div className="flex gap-2">
+          <Input placeholder="Год" className="bg-zinc-900 border-none text-white placeholder-zinc-400 w-1/3" />
+          <Input placeholder="Цена" className="bg-zinc-900 border-none text-white placeholder-zinc-400 w-1/3" />
+          <Button variant="outline" className="bg-zinc-800 text-white w-1/3">
+            <ListFilter size={16} className="mr-1" /> Параметры
+          </Button>
+        </div>
+        <Button className="bg-white text-black font-semibold">Показать 12 593 запчасти</Button>
+      </div>
 
-  <div class="recommendations">
-    <h3>Рекомендации</h3>
-    <div class="item">
-      <img src="https://via.placeholder.com/400x200" alt="item">
-      <p>Фара левая Toyota Camry (XV70)</p>
-      <p>15 000 ₽ — Южно-Сахалинск</p>
-    </div>
-    <div class="item">
-      <img src="https://via.placeholder.com/400x200" alt="item">
-      <p>Тормозные колодки задние Mazda CX-5</p>
-      <p>3 500 ₽ — Холмск</p>
-    </div>
-  </div>
+      <section className="mb-8">
+        <h2 className="text-lg font-semibold mb-2">Рекомендуем</h2>
+        <div className="grid grid-cols-2 gap-4">
+          <Card className="bg-zinc-900 text-white">
+            <CardContent className="p-2">
+              <img src="/soarer.jpg" alt="Деталь 1" className="w-full h-24 object-cover rounded" />
+              <div className="mt-1 text-sm">
+                <p>Фара Toyota Soarer</p>
+                <p className="font-bold">12 000 ₽</p>
+                <p className="text-xs text-zinc-400">Хабаровск</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="bg-zinc-900 text-white">
+            <CardContent className="p-2">
+              <img src="/bmw_part.jpg" alt="Деталь 2" className="w-full h-24 object-cover rounded" />
+              <div className="mt-1 text-sm">
+                <p>Капот BMW E28</p>
+                <p className="font-bold">7 000 ₽</p>
+                <p className="text-xs text-zinc-400">Мытищи</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
-  <div class="bottom-nav">
-    <div class="active">
-      <i class="fas fa-search"></i>
-      <div>Поиск</div>
+      <nav className="fixed bottom-0 left-0 w-full bg-zinc-900 flex justify-around items-center text-xs py-2 border-t border-zinc-800">
+        <div className="flex flex-col items-center text-white">
+          <Search size={20} />
+          Поиск
+        </div>
+        <div className="flex flex-col items-center text-zinc-400">
+          <Store size={20} />
+          Магазины
+        </div>
+        <div className="flex flex-col items-center text-zinc-400">
+          <MessageSquareText size={20} />
+          Сообщения
+        </div>
+        <div className="flex flex-col items-center text-zinc-400">
+          <Settings size={20} />
+          Меню
+        </div>
+      </nav>
     </div>
-    <div>
-      <i class="fas fa-star"></i>
-      <div>Избранное</div>
-    </div>
-    <div>
-      <i class="fas fa-plus-circle"></i>
-      <div>Заявка</div>
-    </div>
-    <div>
-      <i class="fas fa-envelope"></i>
-      <div>Чат</div>
-    </div>
-    <div>
-      <i class="fas fa-bars"></i>
-      <div>Меню</div>
-    </div>
-  </div>
-
-</body>
-</html>
+  );
+}
