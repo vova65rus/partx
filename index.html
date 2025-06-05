@@ -50,6 +50,9 @@
     .card.premium {
       border-left: 5px solid gold;
     }
+    input[type="text"] {
+      margin-top: 6px;
+    }
   </style>
 </head>
 <body>
@@ -81,6 +84,19 @@
     </div>
 
     <div id="results"></div>
+
+    <div id="sellerPanel" style="margin-top: 30px; display: none;">
+      <h3>➕ Добавить запчасть</h3>
+      <input type="text" id="partName" placeholder="Название запчасти" />
+      <input type="text" id="partModel" placeholder="Авто / кузов" />
+      <input type="text" id="partCode" placeholder="Парт номер" />
+      <input type="text" id="partPrice" placeholder="Цена (₽)" />
+      <input type="text" id="partCity" placeholder="Город" />
+      <label><input type="checkbox" id="partInStock" /> В наличии</label>
+      <label><input type="checkbox" id="partPremium" /> Премиум магазин</label>
+      <button onclick="submitPart()">📤 Отправить</button>
+      <div id="submitStatus" style="margin-top: 10px; font-size: 14px;"></div>
+    </div>
   </div>
 
   <script>
@@ -88,9 +104,13 @@
     tg.expand();
 
     const user = tg.initDataUnsafe.user;
+    const SELLERS = [123456789, 987654321]; // 🔁 Замени на реальные Telegram ID продавцов
+
     if (user) {
-      const userInfoDiv = document.getElementById('userInfo');
-      userInfoDiv.innerHTML = `👤 ${user.first_name} (@${user.username || 'нет username'})<br>ID: ${user.id}`;
+      document.getElementById('userInfo').innerHTML = `👤 ${user.first_name} (@${user.username || 'нет username'})<br>ID: ${user.id}`;
+      if (SELLERS.includes(user.id)) {
+        document.getElementById('sellerPanel').style.display = 'block';
+      }
     } else {
       document.getElementById('userInfo').innerHTML = '❌ Пользователь не авторизован';
     }
@@ -105,10 +125,11 @@
       const city = document.getElementById('citySelect').value;
       const inStockOnly = document.getElementById('inStockOnly').checked;
       const sort = document.getElementById('sortSelect').value;
-
       const resultsDiv = document.getElementById('results');
+
       resultsDiv.innerHTML = '⏳ Ищем...';
 
+      // Запрос к Google Apps Script (GET)
       const url = `https://script.google.com/macros/s/ВАШ_ID_СКРИПТА/exec?query=${encodeURIComponent(query)}`;
 
       fetch(url)
@@ -116,21 +137,13 @@
         .then(data => {
           let results = data;
 
-          if (city) {
-            results = results.filter(part => part.city === city);
-          }
-          if (inStockOnly) {
-            results = results.filter(part => part.availability.toLowerCase().includes('в наличии'));
-          }
+          if (city) results = results.filter(part => part.city === city);
+          if (inStockOnly) results = results.filter(part => part.availability.toLowerCase().includes('в наличии'));
 
-          if (sort === 'price_asc') {
-            results.sort((a, b) => parseInt(a.price) - parseInt(b.price));
-          } else if (sort === 'price_desc') {
-            results.sort((a, b) => parseInt(b.price) - parseInt(a.price));
-          }
+          if (sort === 'price_asc') results.sort((a, b) => parseInt(a.price) - parseInt(b.price));
+          else if (sort === 'price_desc') results.sort((a, b) => parseInt(b.price) - parseInt(a.price));
 
           resultsDiv.innerHTML = '';
-
           if (!results || results.length === 0) {
             resultsDiv.innerHTML = '😔 Ничего не найдено';
             return;
@@ -141,7 +154,7 @@
             card.className = 'card' + (part.premium ? ' premium' : '');
             card.innerHTML = `
               <strong>📦 ${part.name} (${part.part})</strong><br>
-              🚗 ${part.model}, кузов: ${part.body}<br>
+              🚗 ${part.model}<br>
               💰 ${part.price}₽ — ${part.availability}<br>
               🏬 ${part.store} — ${part.city}<br>
             `;
@@ -152,6 +165,41 @@
           resultsDiv.innerHTML = '⚠️ Ошибка загрузки данных';
           console.error(err);
         });
+    }
+
+    function submitPart() {
+      const name = document.getElementById('partName').value.trim();
+      const model = document.getElementById('partModel').value.trim();
+      const part = document.getElementById('partCode').value.trim();
+      const price = document.getElementById('partPrice').value.trim();
+      const city = document.getElementById('partCity').value.trim();
+      const availability = document.getElementById('partInStock').checked ? 'В наличии' : 'Под заказ';
+      const premium = document.getElementById('partPremium').checked;
+
+      if (!name || !model || !price || !city) {
+        document.getElementById('submitStatus').innerText = '❗ Заполните все поля';
+        return;
+      }
+
+      const payload = {
+        name, model, part, price, city,
+        availability, premium,
+        store: user.username || user.first_name,
+        user_id: user.id
+      };
+
+      document.getElementById('submitStatus').innerText = '⏳ Отправка...';
+
+      fetch("https://script.google.com/macros/s/AKfycbyToDEZbSf-EmWTJcuYmR3Z_kb9VqUoagW7n5kA-zc7X04VPukQ67CZp35S9fC2xJ6Q/exec", {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      }).then(() => {
+        document.getElementById('submitStatus').innerText = '✅ Отправлено';
+      }).catch(() => {
+        document.getElementById('submitStatus').innerText = '⚠️ Ошибка отправки';
+      });
     }
   </script>
 </body>
