@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Part X</title>
     <style>
         body {
@@ -14,54 +14,55 @@
             flex-direction: column;
             min-height: 100vh;
             color: #e0e0e0;
+            font-size: 13px;
+            overflow-x: hidden;
         }
         .container {
             width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
+            max-width: 100%;
+            padding: 10px;
             background: #2a2f33;
-            border-radius: 12px;
             flex: 1;
+            box-sizing: border-box;
         }
         .header {
-            font-size: 28px;
+            font-size: 22px;
             font-weight: 600;
             text-align: center;
-            margin: 20px 0;
+            margin: 10px 0;
             color: #00a8e8;
         }
         .search-bar-container {
             display: flex;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
         .search-bar {
-            width: 100%;
-            max-width: 360px;
-            padding: 12px;
+            width: 90%;
+            padding: 8px;
             background: #3a4044;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             color: #e0e0e0;
-            font-size: 16px;
+            font-size: 13px;
             outline: none;
         }
         .city-selector {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            padding: 0 10px;
         }
         .city-selector select {
             width: 100%;
-            padding: 12px;
+            padding: 8px;
             background: #3a4044;
             border: none;
-            border-radius: 8px;
+            border-radius: 6px;
             color: #e0e0e0;
-            font-size: 16px;
+            font-size: 13px;
             appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23e0e0e0' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23e0e0e0' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat;
-            background-position: right 10px center;
+            background-position: right 8px center;
             cursor: pointer;
         }
         .city-selector select:focus {
@@ -71,25 +72,26 @@
         .products-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 10px;
+            padding: 0 10px;
         }
         .product-card {
             background: #3a4044;
-            border-radius: 8px;
-            padding: 10px;
+            border-radius: 6px;
+            padding: 6px;
             text-align: center;
         }
         .product-card img {
             width: 100%;
-            height: 100px;
+            height: 70px;
             background: #555;
-            border-radius: 6px;
-            margin-bottom: 10px;
+            border-radius: 4px;
+            margin-bottom: 6px;
         }
         .product-card p {
-            margin: 5px 0;
-            font-size: 14px;
+            margin: 2px 0;
+            font-size: 11px;
             color: #b0b0b0;
         }
         .bottom-menu {
@@ -100,14 +102,15 @@
             background: #2a2f33;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 6px 0;
             border-top: 1px solid #3a4044;
-            max-width: 400px;
-            margin: 0 auto;
+            max-width: 100%;
+            box-sizing: border-box;
         }
         .menu-item {
             color: #e0e0e0;
-            font-size: 12px;
+            font-size: 10px;
+九十百千万亿兆京垓
             text-align: center;
             cursor: pointer;
             flex: 1;
@@ -117,20 +120,23 @@
         }
         .menu-item span {
             display: block;
-            margin-top: 5px;
+            margin-top: 3px;
         }
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 250px;
+            width: 75%;
+            max-width: 280px;
             height: 100%;
             background: #3a4044;
             transform: translateX(-100%);
             transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
-            padding: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            box-sizing: border-box;
         }
         .sidebar.active {
             transform: translateX(0);
@@ -143,22 +149,50 @@
             display: block;
         }
         .sidebar-section p {
-            margin: 10px 0;
-            font-size: 14px;
+            margin: 6px 0;
+            font-size: 12px;
             color: #b0b0b0;
         }
         .close-sidebar {
             background: #00a8e8;
             color: #ffffff;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: 6px 10px;
+            border-radius: 5px;
+            font-size: 12px;
             cursor: pointer;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: center;
         }
         .close-sidebar:hover {
             background: #0091c7;
+        }
+        @media (max-width: 320px) {
+            .header {
+                font-size: 20px;
+            }
+            .search-bar {
+                padding: 6px;
+                font-size: 12px;
+            }
+            .city-selector select {
+                padding: 6px;
+                font-size: 12px;
+            }
+            .product-card img {
+                height: 60px;
+            }
+            .product-card p {
+                font-size: 10px;
+            }
+            .menu-item {
+                font-size: 9px;
+            }
+            .sidebar {
+                width: 80%;
+                max-width: 260px;
+            }
         }
     </style>
 </head>
@@ -168,4 +202,103 @@
         <div id="profile-section" class="sidebar-section">
             <p>Функции личного кабинета в разработке</p>
         </div>
-        <div id="favorites-section" class=" Gilesystem: * Today's date and time is 01:19 PM EEST on Thursday, June 05, 2025.
+        <div id="favorites-section" class="sidebar-section">
+            <p>Функции избранного в разработке</p>
+        </div>
+        <div id="menu-section" class="sidebar-section">
+            <p>Функции меню в разработке</p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="header">Part X</div>
+        <div class="search-bar-container">
+            <input type="text" class="search-bar" placeholder="Поиск товаров...">
+        </div>
+        <div class="city-selector">
+            <select onchange="selectCity(this.value)">
+                <option value="" disabled selected>Выберите город</option>
+                <option value="Южно-Сахалинск">Южно-Сахалинск</option>
+                <option value="Корсаков">Корсаков</option>
+                <option value="Холмск">Холмск</option>
+                <option value="Долинск">Долинск</option>
+            </select>
+        </div>
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p>Товар 1</p>
+                <p>1000 ₽</p>
+            </div>
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p>Товар 2</p>
+                <p>1500 ₽</p>
+            </div>
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p>Товар 3</p>
+                <p>800 ₽</p>
+            </div>
+            <div class="product-card">
+                <div class="product-img"></div>
+                <p>Товар 4</p>
+                <p>1200 ₽</p>
+            </div>
+        </div>
+    </div>
+    <div class="bottom-menu">
+        <div class="menu-item" onclick="toggleSection('profile')">
+            <span>Личный кабинет</span>
+        </div>
+        <div class="menu-item" onclick="toggleSection('favorites')">
+            <span>Избранное</span>
+        </div>
+        <div class="menu-item" onclick="toggleSection('menu')">
+            <span>Меню</span>
+        </div>
+    </div>
+
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand();
+        Telegram.WebApp.setHeaderColor('#2a2f33');
+        Telegram.WebApp.setBackgroundColor('#1c2526');
+
+        function selectCity(city) {
+            Telegram.WebApp.showAlert(`Выбран город: ${city}`);
+        }
+
+        function toggleSection(section) {
+            const sidebar = document.getElementById('sidebar');
+            const sections = ['profile', 'favorites', 'menu'];
+            const isSidebarOpen = sidebar.classList.contains('active');
+
+            sections.forEach(s => {
+                const element = document.getElementById(`${s}-section`);
+                const button = document.querySelector(`.menu-item[onclick="toggleSection('${s}')"]`);
+                if (s === section && !isSidebarOpen) {
+                    element.classList.add('active');
+                    sidebar.classList.add('active');
+                    button.classList.add('active');
+                } else {
+                    element.classList.remove('active');
+                    button.classList.remove('active');
+                }
+            });
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const sections = ['profile', 'favorites', 'menu'];
+            sidebar.classList.remove('active');
+            sections.forEach(s => {
+                const element = document.getElementById(`${s}-section`);
+                const button = document.querySelector(`.menu-item[onclick="toggleSection('${s}')"]`);
+                element.classList.remove('active');
+                button.classList.remove('active');
+            });
+        }
+    </script>
+</body>
+</html>
