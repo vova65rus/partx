@@ -4,103 +4,161 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PartX</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #111;
+      color: #fff;
+    }
+    .top-nav, .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px;
+      background-color: #1a1a1a;
+    }
+    .top-nav div, .bottom-nav div {
+      text-align: center;
+      color: #aaa;
+    }
+    .top-nav div.active, .bottom-nav div.active {
+      color: #fff;
+    }
+    .search-area {
+      padding: 15px;
+    }
+    .search-area input {
+      width: 100%;
+      padding: 10px;
+      background-color: #222;
+      color: #fff;
+      border: none;
+      margin-bottom: 10px;
+    }
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .filters button {
+      flex: 1;
+      padding: 10px;
+      background-color: #222;
+      color: #fff;
+      border: none;
+    }
+    .region-button, .show-button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+    }
+    .history, .recommendations {
+      padding: 0 15px;
+    }
+    .history span {
+      background: #333;
+      padding: 5px 10px;
+      border-radius: 20px;
+      margin-right: 5px;
+      font-size: 14px;
+    }
+    .recommendations h3 {
+      margin-top: 20px;
+    }
+    .item {
+      background: #1a1a1a;
+      margin-bottom: 10px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+    .item img {
+      width: 100%;
+      border-radius: 10px;
+    }
+    .item p {
+      margin: 5px 0;
+    }
+  </style>
 </head>
-<body class="bg-black text-white font-sans">
-  <!-- Header -->
-  <div class="flex items-center justify-between p-4">
-    <div class="text-xl font-bold flex items-center">
-      <span class="material-icons mr-2 text-red-500">directions_car</span>
-      PartX
-    </div>
-    <div class="text-sm text-gray-400">20:47</div>
-  </div>
+<body>
 
-  <!-- Category Tabs -->
-  <div class="flex justify-around py-2 border-b border-gray-800">
-    <div class="flex flex-col items-center text-red-500">
-      <span class="material-icons">directions_car</span>
-      <span class="text-xs">Авто</span>
+  <div class="top-nav">
+    <div class="active">
+      <i class="fas fa-cogs"></i>
+      <div>Запчасти</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">local_shipping</span>
-      <span class="text-xs">Спецтехника</span>
+    <div>
+      <i class="fas fa-truck"></i>
+      <div>Доставка</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">build</span>
-      <span class="text-xs">Запчасти</span>
+    <div>
+      <i class="fas fa-store"></i>
+      <div>Магазины</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">two_wheeler</span>
-      <span class="text-xs">Мото</span>
+    <div>
+      <i class="fas fa-info-circle"></i>
+      <div>Справка</div>
     </div>
   </div>
 
-  <!-- Filters -->
-  <div class="p-4 space-y-2">
-    <input type="text" placeholder="Марка, модель..." class="w-full bg-gray-900 text-white p-2 rounded-md placeholder-gray-500">
-    <div class="grid grid-cols-3 gap-2">
-      <input type="text" placeholder="Год" class="bg-gray-900 p-2 rounded-md placeholder-gray-500">
-      <input type="text" placeholder="Цена" class="bg-gray-900 p-2 rounded-md placeholder-gray-500">
-      <button class="bg-gray-900 p-2 rounded-md flex items-center justify-center text-gray-300">
-        <span class="material-icons mr-1">tune</span> Параметры
-      </button>
+  <div class="search-area">
+    <input type="text" placeholder="Номер кузова, VIN, парт-номер или модель">
+    <div class="filters">
+      <button>Категория</button>
+      <button>Цена</button>
+      <button><i class="fas fa-sliders-h"></i> Параметры</button>
     </div>
-    <input type="text" placeholder="Все регионы" class="w-full bg-gray-900 p-2 rounded-md placeholder-gray-500">
-    <button class="w-full bg-gray-700 p-3 rounded-md text-center font-semibold">Показать 858 593 объявления</button>
+    <button class="region-button">Все регионы</button>
+    <button class="show-button">Показать все предложения</button>
   </div>
 
-  <!-- Search history -->
-  <div class="px-4 text-sm text-gray-400">Вы искали</div>
-  <div class="flex gap-2 px-4 py-2">
-    <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">Toyota Soarer</span>
-    <span class="bg-gray-800 px-3 py-1 rounded-full text-sm">BMW 5-Series</span>
+  <div class="history">
+    <p>Вы искали:</p>
+    <span>Toyota Crown амортизатор</span>
+    <span>1NZ фильтр</span>
   </div>
 
-  <!-- Recommendations -->
-  <div class="px-4 font-bold text-lg">Рекомендации</div>
-  <div class="grid grid-cols-2 gap-2 p-4">
-    <div class="bg-gray-900 rounded-lg overflow-hidden">
-      <img src="https://via.placeholder.com/300x200" alt="Toyota" class="w-full h-32 object-cover">
-      <div class="p-2">
-        <div class="text-sm">Toyota Soarer, 1994</div>
-        <div class="text-lg font-semibold">1 200 000 ₽</div>
-        <div class="text-xs text-gray-400">Хабаровск</div>
-      </div>
+  <div class="recommendations">
+    <h3>Рекомендации</h3>
+    <div class="item">
+      <img src="https://via.placeholder.com/400x200" alt="item">
+      <p>Фара левая Toyota Camry (XV70)</p>
+      <p>15 000 ₽ — Южно-Сахалинск</p>
     </div>
-    <div class="bg-gray-900 rounded-lg overflow-hidden">
-      <img src="https://via.placeholder.com/300x200" alt="BMW" class="w-full h-32 object-cover">
-      <div class="p-2">
-        <div class="text-sm">BMW 5-Series, 1977</div>
-        <div class="text-lg font-semibold">300 000 ₽</div>
-        <div class="text-xs text-gray-400">Мытищи</div>
-      </div>
+    <div class="item">
+      <img src="https://via.placeholder.com/400x200" alt="item">
+      <p>Тормозные колодки задние Mazda CX-5</p>
+      <p>3 500 ₽ — Холмск</p>
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
-  <div class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-800 flex justify-around py-2">
-    <div class="flex flex-col items-center text-white">
-      <span class="material-icons">search</span>
-      <span class="text-xs">Поиск</span>
+  <div class="bottom-nav">
+    <div class="active">
+      <i class="fas fa-search"></i>
+      <div>Поиск</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">star_border</span>
-      <span class="text-xs">Подписки</span>
+    <div>
+      <i class="fas fa-star"></i>
+      <div>Избранное</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">add_box</span>
-      <span class="text-xs">Объявл.</span>
+    <div>
+      <i class="fas fa-plus-circle"></i>
+      <div>Заявка</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">chat_bubble</span>
-      <span class="text-xs">Сообщения</span>
+    <div>
+      <i class="fas fa-envelope"></i>
+      <div>Чат</div>
     </div>
-    <div class="flex flex-col items-center text-gray-400">
-      <span class="material-icons">menu</span>
-      <span class="text-xs">Меню</span>
+    <div>
+      <i class="fas fa-bars"></i>
+      <div>Меню</div>
     </div>
   </div>
+
 </body>
 </html>
