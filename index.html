@@ -16,18 +16,26 @@
       margin: auto;
       text-align: center;
     }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      font-size: 16px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
+    <div class="filters">
+  <input type="text" id="searchInput" placeholder="Введите номер детали, кузов или авто">
+
+  <select id="citySelect">
+    <option value="">Все города</option>
+    <option value="Южно-Сахалинск">Южно-Сахалинск</option>
+    <option value="Холмск">Холмск</option>
+    <option value="Корсаков">Корсаков</option>
+  </select>
+
+  <label><input type="checkbox" id="inStockOnly"> Только в наличии</label>
+
+  <select id="sortSelect">
+    <option value="">Без сортировки</option>
+    <option value="price_asc">По цене ↑</option>
+    <option value="price_desc">По цене ↓</option>
+  </select>
+
+  <button onclick="searchParts()">🔍 Найти</button>
+</div>
     #results {
       margin-top: 20px;
       text-align: left;
