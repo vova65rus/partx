@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Поиск запчастей</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      text-align: center;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #results {
+      margin-top: 20px;
+      text-align: left;
+    }
+    .card {
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+    }
+    .card.premium {
+      border-left: 5px solid gold;
+    }
+  </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h2>🔧 Поиск автозапчастей</h2>
+    <input type="text" id="searchInput" placeholder="Введите номер детали, кузов или авто">
+    <button onclick="searchParts()">🔍 Найти</button>
+    <div id="results"></div>
+  </div>
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    function searchParts() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+
+      document.getElementById('results').innerHTML = '⏳ Ищем...';
+
+      fetch(`https://script.google.com/macros/s/AKfycbxBtQU_L6UJZN1_SyXiTIxjZnOE-8eClEgOQQsE2fFzWuid21SX-1pxuxFhq2b_YyjS/exec?query=${encodeURIComponent(query)}`)
+        .then(res => res.json())
+        .then(data => {
+          const resultsDiv = document.getElementById('results');
+          resultsDiv.innerHTML = '';
+
+          if (!data || data.length === 0) {
+            resultsDiv.innerHTML = '😔 Ничего не найдено';
+            return;
+          }
+
+          data.forEach(part => {
+            const card = document.createElement('div');
+            card.className = 'card' + (part.premium ? ' premium' : '');
+
+            card.innerHTML = `
+              <strong>📦 ${part.name} (${part.part})</strong><br>
+              🚗 ${part.model}, кузов: ${part.body}<br>
+              💰 ${part.price}₽ — ${part.availability}<br>
+              🏬 ${part.store} — ${part.city}<br>
+            `;
+
+            resultsDiv.appendChild(card);
+          });
+        });
+    }
+  </script>
+</body>
+</html>
