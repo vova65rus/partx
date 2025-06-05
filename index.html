@@ -54,6 +54,9 @@
 </head>
 <body>
   <div class="container">
+    <div id="userInfo" style="margin-bottom: 16px; font-size: 14px; color: #555;"></div>
+    <button onclick="showMyOrders()" style="background:#eaeaea;">📋 Мои заказы</button>
+
     <h2>🔧 Поиск автозапчастей</h2>
 
     <div class="filters">
@@ -84,21 +87,35 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+      const userInfoDiv = document.getElementById('userInfo');
+      userInfoDiv.innerHTML = `👤 ${user.first_name} (@${user.username || 'нет username'})<br>ID: ${user.id}`;
+    } else {
+      document.getElementById('userInfo').innerHTML = '❌ Пользователь не авторизован';
+    }
+
+    function showMyOrders() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = `<div class="card">📋 Ваши заказы будут отображаться здесь (в разработке)</div>`;
+    }
+
     function searchParts() {
       const query = document.getElementById('searchInput').value.trim();
       const city = document.getElementById('citySelect').value;
       const inStockOnly = document.getElementById('inStockOnly').checked;
       const sort = document.getElementById('sortSelect').value;
 
-      document.getElementById('results').innerHTML = '⏳ Ищем...';
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '⏳ Ищем...';
 
-      const url = `https://script.google.com/macros/s/AKfycbxBtQU_L6UJZN1_SyXiTIxjZnOE-8eClEgOQQsE2fFzWuid21SX-1pxuxFhq2b_YyjS/exec?query=${encodeURIComponent(query)}`;
+      const url = `https://script.google.com/macros/s/ВАШ_ID_СКРИПТА/exec?query=${encodeURIComponent(query)}`;
+
       fetch(url)
-        .then(res => res.json())
+        .then(response => response.json())
         .then(data => {
           let results = data;
 
-          // Фильтрация
           if (city) {
             results = results.filter(part => part.city === city);
           }
@@ -106,14 +123,12 @@
             results = results.filter(part => part.availability.toLowerCase().includes('в наличии'));
           }
 
-          // Сортировка
           if (sort === 'price_asc') {
-            results = results.sort((a, b) => parseInt(a.price) - parseInt(b.price));
+            results.sort((a, b) => parseInt(a.price) - parseInt(b.price));
           } else if (sort === 'price_desc') {
-            results = results.sort((a, b) => parseInt(b.price) - parseInt(a.price));
+            results.sort((a, b) => parseInt(b.price) - parseInt(a.price));
           }
 
-          const resultsDiv = document.getElementById('results');
           resultsDiv.innerHTML = '';
 
           if (!results || results.length === 0) {
@@ -132,6 +147,10 @@
             `;
             resultsDiv.appendChild(card);
           });
+        })
+        .catch(err => {
+          resultsDiv.innerHTML = '⚠️ Ошибка загрузки данных';
+          console.error(err);
         });
     }
   </script>
