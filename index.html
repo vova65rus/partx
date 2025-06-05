@@ -1,101 +1,175 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Поиск запчастей</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
+    :root {
+      --primary-color: #007bff;
+      --success-color: #28a745;
+      --error-color: #dc3545;
+      --border-radius: 8px;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f6f5;
+      margin: 0;
+      padding: 16px;
+      line-height: 1.5;
+    }
+
     .container {
-      max-width: 400px;
-      margin: auto;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .user-info {
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #495057;
       text-align: center;
     }
+
+    h2 {
+      text-align: center;
+      margin: 16px 0;
+      color: #212529;
+    }
+
+    .filters {
+      background: #fff;
+      padding: 16px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
     .filters input,
     .filters select {
       width: 100%;
-      padding: 8px;
-      margin-top: 8px;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ced4da;
+      border-radius: 4px;
       font-size: 14px;
     }
+
     .filters label {
-      display: block;
-      margin-top: 8px;
-      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0;
+      font-size: 14px;
     }
+
     button {
-      margin-top: 10px;
-      padding: 10px 20px;
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: none;
+      border-radius: 4px;
+      background: var(--primary-color);
+      color: #fff;
       font-size: 16px;
       cursor: pointer;
-      width: 100%;
+      transition: background 0.2s;
     }
-    #results {
-      margin-top: 20px;
-      text-align: left;
+
+    button:hover {
+      background: #0056b3;
     }
+
+    button.secondary {
+      background: #6c757d;
+    }
+
+    .results {
+      margin-top: 16px;
+    }
+
     .card {
-      background: white;
-      padding: 12px;
-      border-radius: 8px;
-      margin-bottom: 10px;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+      background: #fff;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
+
     .card.premium {
-      border-left: 5px solid gold;
+      border-left: 4px solid #ffd700;
     }
-    input[type="text"] {
-      margin-top: 6px;
+
+    .seller-panel {
+      margin-top: 24px;
+      background: #fff;
+      padding: 16px;
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-message {
+      margin-top: 12px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .status-message.success {
+      color: var(--success-color);
+    }
+
+    .status-message.error {
+      color: var(--error-color);
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div id="userInfo" style="margin-bottom: 16px; font-size: 14px; color: #555;"></div>
-    <button onclick="showMyOrders()" style="background:#eaeaea;">📋 Мои заказы</button>
+    <div class="user-info" id="userInfo"></div>
+    <button class="secondary" onclick="showMyOrders()">📋 Мои заказы</button>
 
     <h2>🔧 Поиск автозапчастей</h2>
-
     <div class="filters">
-      <input type="text" id="searchInput" placeholder="Введите номер детали, кузов или авто" />
-
+      <input type="text" id="searchInput" placeholder="Номер детали, кузов или авто" />
       <select id="citySelect">
         <option value="">Все города</option>
         <option value="Южно-Сахалинск">Южно-Сахалинск</option>
         <option value="Холмск">Холмск</option>
         <option value="Корсаков">Корсаков</option>
       </select>
-
-      <label><input type="checkbox" id="inStockOnly" /> Только в наличии</label>
-
+      <label>
+        <input type="checkbox" id="inStockOnly" /> Только в наличии
+      </label>
       <select id="sortSelect">
         <option value="">Без сортировки</option>
         <option value="price_asc">По цене ↑</option>
         <option value="price_desc">По цене ↓</option>
       </select>
-
       <button onclick="searchParts()">🔍 Найти</button>
     </div>
 
-    <div id="results"></div>
+    <div class="results" id="results"></div>
 
-    <div id="sellerPanel" style="margin-top: 30px; display: none;">
+    <div class="seller-panel" id="sellerPanel" style="display: none;">
       <h3>➕ Добавить запчасть</h3>
       <input type="text" id="partName" placeholder="Название запчасти" />
       <input type="text" id="partModel" placeholder="Авто / кузов" />
       <input type="text" id="partCode" placeholder="Парт номер" />
-      <input type="text" id="partPrice" placeholder="Цена (₽)" />
+      <input type="text" id="partPrice" placeholder="Цена (₽)" pattern="[0-9]*" />
       <input type="text" id="partCity" placeholder="Город" />
-      <label><input type="checkbox" id="partInStock" /> В наличии</label>
-      <label><input type="checkbox" id="partPremium" /> Премиум магазин</label>
+      <label>
+        <input type="checkbox" id="partInStock" /> В наличии
+      </label>
+      <label>
+        <input type="checkbox" id="partPremium" /> Премиум магазин
+      </label>
       <button onclick="submitPart()">📤 Отправить</button>
-      <div id="submitStatus" style="margin-top: 10px; font-size: 14px;"></div>
+      <div class="status-message" id="submitStatus"></div>
     </div>
   </div>
 
@@ -103,104 +177,154 @@
     const tg = window.Telegram.WebApp;
     tg.expand();
 
-    const user = tg.initDataUnsafe.user;
-    const SELLERS = [123456789, 987654321]; // 🔁 Замени на реальные Telegram ID продавцов
+    const SELLERS = [123456789, 987654321]; // Замените на реальные Telegram ID
+    const API_URL = 'https://script.google.com/macros/s/AKfycbx7QSF4r_yD4PVRKjwtJg6f8oK3DUXFJXMTTPwcKpQ-DZP0XfTEB8KrsJLMQ9ZL0BHS/exec'; // Замените на реальный URL
 
-    if (user) {
-      document.getElementById('userInfo').innerHTML = `👤 ${user.first_name} (@${user.username || 'нет username'})<br>ID: ${user.id}`;
-      if (SELLERS.includes(user.id)) {
-        document.getElementById('sellerPanel').style.display = 'block';
-      }
-    } else {
-      document.getElementById('userInfo').innerHTML = '❌ Пользователь не авторизован';
-    }
-
-    function showMyOrders() {
-      const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = `<div class="card">📋 Ваши заказы будут отображаться здесь (в разработке)</div>`;
-    }
-
-    function searchParts() {
-      const query = document.getElementById('searchInput').value.trim();
-      const city = document.getElementById('citySelect').value;
-      const inStockOnly = document.getElementById('inStockOnly').checked;
-      const sort = document.getElementById('sortSelect').value;
-      const resultsDiv = document.getElementById('results');
-
-      resultsDiv.innerHTML = '⏳ Ищем...';
-
-      // Запрос к Google Apps Script (GET)
-      const url = `https://script.google.com/macros/s/ВАШ_ID_СКРИПТА/exec?query=${encodeURIComponent(query)}`;
-
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          let results = data;
-
-          if (city) results = results.filter(part => part.city === city);
-          if (inStockOnly) results = results.filter(part => part.availability.toLowerCase().includes('в наличии'));
-
-          if (sort === 'price_asc') results.sort((a, b) => parseInt(a.price) - parseInt(b.price));
-          else if (sort === 'price_desc') results.sort((a, b) => parseInt(b.price) - parseInt(a.price));
-
-          resultsDiv.innerHTML = '';
-          if (!results || results.length === 0) {
-            resultsDiv.innerHTML = '😔 Ничего не найдено';
-            return;
-          }
-
-          results.forEach(part => {
-            const card = document.createElement('div');
-            card.className = 'card' + (part.premium ? ' premium' : '');
-            card.innerHTML = `
-              <strong>📦 ${part.name} (${part.part})</strong><br>
-              🚗 ${part.model}<br>
-              💰 ${part.price}₽ — ${part.availability}<br>
-              🏬 ${part.store} — ${part.city}<br>
-            `;
-            resultsDiv.appendChild(card);
-          });
-        })
-        .catch(err => {
-          resultsDiv.innerHTML = '⚠️ Ошибка загрузки данных';
-          console.error(err);
-        });
-    }
-
-    function submitPart() {
-      const name = document.getElementById('partName').value.trim();
-      const model = document.getElementById('partModel').value.trim();
-      const part = document.getElementById('partCode').value.trim();
-      const price = document.getElementById('partPrice').value.trim();
-      const city = document.getElementById('partCity').value.trim();
-      const availability = document.getElementById('partInStock').checked ? 'В наличии' : 'Под заказ';
-      const premium = document.getElementById('partPremium').checked;
-
-      if (!name || !model || !price || !city) {
-        document.getElementById('submitStatus').innerText = '❗ Заполните все поля';
+    // Инициализация пользователя
+    function initUser() {
+      const user = tg.initDataUnsafe?.user;
+      const userInfo = document.getElementById('userInfo');
+      
+      if (!user) {
+        userInfo.innerHTML = '❌ Пользователь не авторизован';
         return;
       }
 
-      const payload = {
-        name, model, part, price, city,
-        availability, premium,
-        store: user.username || user.first_name,
-        user_id: user.id
+      userInfo.innerHTML = `👤 ${sanitizeHTML(user.first_name)} (@${sanitizeHTML(user.username || 'нет username')})<br>ID: ${user.id}`;
+      if (SELLERS.includes(user.id)) {
+        document.getElementById('sellerPanel').style.display = 'block';
+      }
+
+      return user;
+    }
+
+    // Санитизация HTML для предотвращения XSS
+    function sanitizeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Отображение заказов
+    function showMyOrders() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<div class="card">📋 Ваши заказы будут отображаться здесь (в разработке)</div>';
+    }
+
+    // Поиск запчастей
+    async function searchParts() {
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<div class="card">⏳ Ищем...</div>';
+
+      try {
+        const query = document.getElementById('searchInput').value.trim();
+        const city = document.getElementById('citySelect').value;
+        const inStockOnly = document.getElementById('inStockOnly').checked;
+        const sort = document.getElementById('sortSelect').value;
+
+        const url = new URL(API_URL);
+        url.searchParams.append('query', query);
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network error');
+        
+        let results = await response.json();
+
+        // Фильтрация
+        if (city) {
+          results = results.filter(part => part.city === city);
+        }
+        if (inStockOnly) {
+          results = results.filter(part => part.availability.toLowerCase().includes('в наличии'));
+        }
+
+        // Сортировка
+        if (sort === 'price_asc') {
+          results.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+        } else if (sort === 'price_desc') {
+          results.sort((a, b) => parseFloat(b.price) - parseFloat(a.price));
+        }
+
+        resultsDiv.innerHTML = '';
+        if (!results?.length) {
+          resultsDiv.innerHTML = '<div class="card">😔 Ничего не найдено</div>';
+          return;
+        }
+
+        results.forEach(part => {
+          const card = document.createElement('div');
+          card.className = `card ${part.premium ? 'premium' : ''}`;
+          card.innerHTML = `
+            <strong>📦 ${sanitizeHTML(part.name)} (${sanitizeHTML(part.part)})</strong><br>
+            🚗 ${sanitizeHTML(part.model)}<br>
+            💰 ${sanitizeHTML(part.price)}₽ — ${sanitizeHTML(part.availability)}<br>
+            🏬 ${sanitizeHTML(part.store)} — ${sanitizeHTML(part.city)}<br>
+          `;
+          resultsDiv.appendChild(card);
+        });
+      } catch (error) {
+        resultsDiv.innerHTML = '<div class="card">⚠️ Ошибка загрузки данных</div>';
+        console.error('Search error:', error);
+      }
+    }
+
+    // Отправка новой запчасти
+    async function submitPart() {
+      const statusDiv = document.getElementById('submitStatus');
+      const user = tg.initDataUnsafe?.user;
+
+      const partData = {
+        name: document.getElementById('partName').value.trim(),
+        model: document.getElementById('partModel').value.trim(),
+        part: document.getElementById('partCode').value.trim(),
+        price: document.getElementById('partPrice').value.trim(),
+        city: document.getElementById('partCity').value.trim(),
+        availability: document.getElementById('partInStock').checked ? 'В наличии' : 'Под заказ',
+        premium: document.getElementById('partPremium').checked,
+        store: user?.username || user?.first_name || 'Аноним',
+        user_id: user?.id || null
       };
 
-      document.getElementById('submitStatus').innerText = '⏳ Отправка...';
+      // Валидация
+      if (!partData.name || !partData.model || !partData.price || !partData.city) {
+        statusDiv.className = 'status-message error';
+        statusDiv.innerText = '❗ Заполните все обязательные поля';
+        return;
+      }
 
-      fetch("https://script.google.com/macros/s/AKfycbx7QSF4r_yD4PVRKjwtJg6f8oK3DUXFJXMTTPwcKpQ-DZP0XfTEB8KrsJLMQ9ZL0BHS/exec", {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      }).then(() => {
-        document.getElementById('submitStatus').innerText = '✅ Отправлено';
-      }).catch(() => {
-        document.getElementById('submitStatus').innerText = '⚠️ Ошибка отправки';
-      });
+      if (isNaN(parseFloat(partData.price))) {
+        statusDiv.className = 'status-message error';
+        statusDiv.innerText = '❗ Цена должна быть числом';
+        return;
+      }
+
+      statusDiv.className = 'status-message';
+      statusDiv.innerText = '⏳ Отправка...';
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(partData)
+        });
+
+        if (!response.ok) throw new Error('Network error');
+        
+        statusDiv.className = 'status-message success';
+        statusDiv.innerText = '✅ Запчасть добавлена';
+        
+        // Очистка формы
+        document.querySelectorAll('.seller-panel input:not([type=checkbox])').forEach(input => input.value = '');
+        document.querySelectorAll('.seller-panel input[type=checkbox]').forEach(input => input.checked = false);
+      } catch (error) {
+        statusDiv.className = 'status-message error';
+        statusDiv.innerText = '⚠️ Ошибка при добавлении';
+        console.error('Submit error:', error);
+      }
     }
+
+    // Инициализация при загрузке
+    document.addEventListener('DOMContentLoaded', initUser);
   </script>
 </body>
 </html>
