@@ -130,7 +130,7 @@
       resultsDiv.innerHTML = '⏳ Ищем...';
 
       // Запрос к Google Apps Script (GET)
-      const url = `https://script.google.com/macros/s/ВАШ_ID_СКРИПТА/exec?query=${encodeURIComponent(query)}`;
+      const url = `https://script.google.com/macros/s/AKfycbx7QSF4r_yD4PVRKjwtJg6f8oK3DUXFJXMTTPwcKpQ-DZP0XfTEB8KrsJLMQ9ZL0BHS/exec?query=${encodeURIComponent(query)}`;
 
       fetch(url)
         .then(response => response.json())
@@ -190,7 +190,7 @@
 
       document.getElementById('submitStatus').innerText = '⏳ Отправка...';
 
-      fetch("https://script.google.com/macros/s/AKfycbyToDEZbSf-EmWTJcuYmR3Z_kb9VqUoagW7n5kA-zc7X04VPukQ67CZp35S9fC2xJ6Q/exec", {
+      fetch("https://script.google.com/macros/s/AKfycbx7QSF4r_yD4PVRKjwtJg6f8oK3DUXFJXMTTPwcKpQ-DZP0XfTEB8KrsJLMQ9ZL0BHS/exec", {
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "application/json" },
