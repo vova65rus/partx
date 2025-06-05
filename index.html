@@ -16,6 +16,11 @@
             color: #ffffff;
             font-size: 13px;
             overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-theme {
+            background-color: #ffffff;
+            color: #000000;
         }
         .container {
             width: 100%;
@@ -24,6 +29,10 @@
             background: #1c1c1e;
             flex: 1;
             box-sizing: border-box;
+            transition: background-color 0.3s;
+        }
+        body.light-theme .container {
+            background: #f2f2f7;
         }
         .top-bar {
             display: flex;
@@ -40,12 +49,17 @@
             color: #0a84ff;
             cursor: pointer;
         }
+        body.light-theme .top-bar .icon {
+            color: #007aff;
+        }
         .header {
-            font-size: 22px;
-            font-weight: 600;
-            text-align: center;
+            display: flex;
+            justify-content: center;
             margin: 10px 0;
-            color: #0a84ff;
+        }
+        .header svg {
+            width: 120px;
+            height: 40px;
         }
         .search-bar-container {
             display: flex;
@@ -62,6 +76,12 @@
             font-size: 13px;
             outline: none;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-theme .search-bar {
+            background: #ffffff;
+            color: #000000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .filter-container {
             display: flex;
@@ -85,10 +105,19 @@
             background-repeat: no-repeat;
             background-position: right 8px center;
             cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.light-theme .city-selector select, body.light-theme .condition-selector select {
+            background: #ffffff;
+            color: #000000;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23000000' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
         }
         .city-selector select:focus, .condition-selector select:focus {
             outline: none;
             background: #3a3a3c;
+        }
+        body.light-theme .city-selector select:focus, body.light-theme .condition-selector select:focus {
+            background: #e5e5ea;
         }
         .products-grid {
             display: grid;
@@ -103,6 +132,11 @@
             padding: 6px;
             text-align: center;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s;
+        }
+        body.light-theme .product-card {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         .product-card img {
             width: 100%;
@@ -110,11 +144,19 @@
             background: #3a3a3c;
             border-radius: 8px;
             margin-bottom: 6px;
+            transition: background-color 0.3s;
+        }
+        body.light-theme .product-card img {
+            background: #e5e5ea;
         }
         .product-card p {
             margin: 2px 0;
             font-size: 11px;
             color: #8e8e93;
+            transition: color 0.3s;
+        }
+        body.light-theme .product-card p {
+            color: #3c3c43;
         }
         .bottom-menu {
             position: fixed;
@@ -129,7 +171,13 @@
             max-width: 100%;
             margin-bottom: 10px;
             box-sizing: border-box;
-            z-index: 500;
+            z-index: 2000;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s;
+        }
+        body.light-theme .bottom-menu {
+            background: #f2f2f7;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
         }
         .menu-item {
             color: #8e8e93;
@@ -139,9 +187,16 @@
             flex: 1;
             padding: 8px;
             position: relative;
+            transition: color 0.3s;
+        }
+        body.light-theme .menu-item {
+            color: #3c3c43;
         }
         .menu-item.active {
             color: #0a84ff;
+        }
+        body.light-theme .menu-item.active {
+            color: #007aff;
         }
         .menu-item:not(:last-child)::after {
             content: '';
@@ -151,6 +206,10 @@
             height: 80%;
             width: 1px;
             background: #3a3a3c;
+            transition: background-color 0.3s;
+        }
+        body.light-theme .menu-item:not(:last-child)::after {
+            background: #d1d1d6;
         }
         .menu-item span {
             display: block;
@@ -167,15 +226,19 @@
             left: 0;
             width: 75%;
             max-width: 280px;
-            height: 100%;
+            height: calc(100% - 70px);
             background: #1c1c1e;
             transform: translateX(-100%);
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease, background-color 0.3s;
             opacity: 0;
             padding: 10px;
             box-shadow: 2px 0 6px rgba(0, 0, 0, 0.3);
             z-index: 1000;
             box-sizing: border-box;
+        }
+        body.light-theme .sidebar {
+            background: #f2f2f7;
+            box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);
         }
         .sidebar.active {
             transform: translateX(0);
@@ -191,6 +254,44 @@
             margin: 6px 0;
             font-size: 12px;
             color: #8e8e93;
+            transition: color 0.3s;
+        }
+        body.light-theme .sidebar-section p {
+            color: #3c3c43;
+        }
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+        .theme-toggle input {
+            appearance: none;
+            width: 40px;
+            height: 20px;
+            background: #3a3a3c;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        body.light-theme .theme-toggle input {
+            background: #d1d1d6;
+        }
+        .theme-toggle input::before {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            background: #ffffff;
+            border-radius: 50%;
+            top: 1px;
+            left: 1px;
+            transition: transform 0.3s;
+        }
+        .theme-toggle input:checked::before {
+            transform: translateX(20px);
         }
         .close-sidebar {
             background: #0a84ff;
@@ -203,13 +304,19 @@
             margin-bottom: 10px;
             width: 100%;
             text-align: center;
+            transition: background-color 0.3s;
+        }
+        body.light-theme .close-sidebar {
+            background: #007aff;
+            color: #000000;
         }
         .close-sidebar:hover {
             background: #007aff;
         }
         @media (max-width: 320px) {
-            .header {
-                font-size: 20px;
+            .header svg {
+                width: 100px;
+                height: 34px;
             }
             .search-bar {
                 padding: 6px;
@@ -236,6 +343,7 @@
             .sidebar {
                 width: 80%;
                 max-width: 260px;
+                height: calc(100% - 60px);
             }
         }
     </style>
@@ -243,6 +351,14 @@
 <body>
     <div class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="closeSidebar()">Закрыть</button>
+        <div id="profile-section" class="sidebar-section">
+            <div class="theme-toggle">
+                <label>Тема:</label>
+                <input type="checkbox" id="theme-toggle" onchange="toggleTheme()">
+                <span id="theme-label">Тёмная</span>
+            </div>
+            <p>Функции личного кабинета в разработке</p>
+        </div>
         <div id="search-section" class="sidebar-section">
             <p>Функции поиска в разработке</p>
         </div>
@@ -268,14 +384,19 @@
                 <span>Магазины</span>
             </div>
         </div>
-        <div class="header">Part X</div>
+        <div class="header">
+            <svg viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0" y="0" width="120" height="40" rx="10" fill="#0a84ff"/>
+                <text x="50%" y="50%" font-family="'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="20" font-weight="600" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">Part X</text>
+            </svg>
+        </div>
         <div class="search-bar-container">
             <input type="text" class="search-bar" placeholder="Поиск товаров...">
         </div>
         <div class="filter-container">
             <div class="city-selector">
                 <select onchange="selectCity(this.value)">
-                    <option value="" disabled selected>Все города</option>
+                    <option value="Все города">Все города</option>
                     <option value="Южно-Сахалинск">Южно-Сахалинск</option>
                     <option value="Корсаков">Корсаков</option>
                     <option value="Холмск">Холмск</option>
@@ -284,7 +405,7 @@
             </div>
             <div class="condition-selector">
                 <select onchange="selectCondition(this.value)">
-                    <option value="" disabled selected>Все запчасти</option>
+                    <option value="Все запчасти">Все запчасти</option>
                     <option value="Новые">Новые</option>
                     <option value="Контрактные">Контрактные</option>
                     <option value="Б/у">Б/у</option>
@@ -315,6 +436,12 @@
         </div>
     </div>
     <div class="bottom-menu">
+        <div class="menu-item" onclick="toggleSection('profile')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/>
+            </svg>
+            <span>Личный кабинет</span>
+        </div>
         <div class="menu-item" onclick="toggleSection('search')">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-4.23c0-3.58-2.92-6.5-6.5-6.5s-6.5 2.92-6.5 6.5 2.92 6.5 6.5 6.5c1.59 0 3.04-.58 4.17-1.54l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -358,7 +485,7 @@
 
         function toggleSection(section) {
             const sidebar = document.getElementById('sidebar');
-            const sections = ['search', 'favorites', 'messages'];
+            const sections = ['profile', 'search', 'favorites', 'messages'];
             const isSidebarOpen = sidebar.classList.contains('active');
 
             sections.forEach(s => {
@@ -377,7 +504,7 @@
 
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const sections = ['search', 'favorites', 'messages'];
+            const sections = ['profile', 'search', 'favorites', 'messages'];
             sidebar.classList.remove('active');
             sections.forEach(s => {
                 const element = document.getElementById(`${s}-section`);
@@ -386,6 +513,39 @@
                 button.classList.remove('active');
             });
         }
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeLabel = document.getElementById('theme-label');
+            if (themeToggle.checked) {
+                body.classList.add('light-theme');
+                themeLabel.textContent = 'Светлая';
+                Telegram.WebApp.setHeaderColor('#f2f2f7');
+                Telegram.WebApp.setBackgroundColor('#ffffff');
+            } else {
+                body.classList.remove('light-theme');
+                themeLabel.textContent = 'Тёмная';
+                Telegram.WebApp.setHeaderColor('#1c1c1e');
+                Telegram.WebApp.setBackgroundColor('#000000');
+            }
+        }
+
+        // Initialize theme based on local storage or default to dark
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme');
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeLabel = document.getElementById('theme-label');
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                themeToggle.checked = true;
+                themeLabel.textContent = 'Светлая';
+                Telegram.WebApp.setHeaderColor('#f2f2f7');
+                Telegram.WebApp.setBackgroundColor('#ffffff');
+            } else {
+                themeLabel.textContent = 'Тёмная';
+            }
+        });
     </script>
 </body>
 </html>
