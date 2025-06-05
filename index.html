@@ -7,13 +7,13 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #1c2526;
+            background-color: #000000;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            color: #e0e0e0;
+            color: #ffffff;
             font-size: 13px;
             overflow-x: hidden;
         }
@@ -21,16 +21,31 @@
             width: 100%;
             max-width: 100%;
             padding: 10px;
-            background: #2a2f33;
+            background: #1c1c1e;
             flex: 1;
             box-sizing: border-box;
+        }
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        .top-bar .icon {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+            color: #0a84ff;
+            cursor: pointer;
         }
         .header {
             font-size: 22px;
             font-weight: 600;
             text-align: center;
             margin: 10px 0;
-            color: #00a8e8;
+            color: #0a84ff;
         }
         .search-bar-container {
             display: flex;
@@ -40,34 +55,40 @@
         .search-bar {
             width: 90%;
             padding: 8px;
-            background: #3a4044;
+            background: #2c2c2e;
             border: none;
-            border-radius: 6px;
-            color: #e0e0e0;
+            border-radius: 10px;
+            color: #ffffff;
             font-size: 13px;
             outline: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
-        .city-selector {
+        .filter-container {
+            display: flex;
+            gap: 10px;
             margin-bottom: 10px;
             padding: 0 10px;
         }
-        .city-selector select {
+        .city-selector, .condition-selector {
+            flex: 1;
+        }
+        .city-selector select, .condition-selector select {
             width: 100%;
             padding: 8px;
-            background: #3a4044;
+            background: #2c2c2e;
             border: none;
-            border-radius: 6px;
-            color: #e0e0e0;
+            border-radius: 10px;
+            color: #ffffff;
             font-size: 13px;
             appearance: none;
-            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23e0e0e0' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23ffffff' viewBox='0 0 24 24'><path d='M7 10l5 5 5-5z'/></svg>");
             background-repeat: no-repeat;
             background-position: right 8px center;
             cursor: pointer;
         }
-        .city-selector select:focus {
+        .city-selector select:focus, .condition-selector select:focus {
             outline: none;
-            background: #4a5055;
+            background: #3a3a3c;
         }
         .products-grid {
             display: grid;
@@ -77,51 +98,68 @@
             padding: 0 10px;
         }
         .product-card {
-            background: #3a4044;
-            border-radius: 6px;
+            background: #2c2c2e;
+            border-radius: 10px;
             padding: 6px;
             text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
         .product-card img {
             width: 100%;
             height: 70px;
-            background: #555;
-            border-radius: 4px;
+            background: #3a3a3c;
+            border-radius: 8px;
             margin-bottom: 6px;
         }
         .product-card p {
             margin: 2px 0;
             font-size: 11px;
-            color: #b0b0b0;
+            color: #8e8e93;
         }
         .bottom-menu {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            background: #2a2f33;
+            background: #1c1c1e;
             display: flex;
             justify-content: space-around;
+            align-items: center;
             padding: 12px 0;
-            border-top: 1px solid #3a4044;
             max-width: 100%;
             margin-bottom: 10px;
             box-sizing: border-box;
+            z-index: 500;
         }
         .menu-item {
-            color: #e0e0e0;
+            color: #8e8e93;
             font-size: 12px;
             text-align: center;
             cursor: pointer;
             flex: 1;
             padding: 8px;
+            position: relative;
         }
         .menu-item.active {
-            color: #00a8e8;
+            color: #0a84ff;
+        }
+        .menu-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 10%;
+            height: 80%;
+            width: 1px;
+            background: #3a3a3c;
         }
         .menu-item span {
             display: block;
             margin-top: 6px;
+        }
+        .menu-item svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
         }
         .sidebar {
             position: fixed;
@@ -130,7 +168,7 @@
             width: 75%;
             max-width: 280px;
             height: 100%;
-            background: #3a4044;
+            background: #1c1c1e;
             transform: translateX(-100%);
             transition: transform 0.3s ease, opacity 0.3s ease;
             opacity: 0;
@@ -152,14 +190,14 @@
         .sidebar-section p {
             margin: 6px 0;
             font-size: 12px;
-            color: #b0b0b0;
+            color: #8e8e93;
         }
         .close-sidebar {
-            background: #00a8e8;
+            background: #0a84ff;
             color: #ffffff;
             border: none;
             padding: 6px 10px;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 12px;
             cursor: pointer;
             margin-bottom: 10px;
@@ -167,7 +205,7 @@
             text-align: center;
         }
         .close-sidebar:hover {
-            background: #0091c7;
+            background: #007aff;
         }
         @media (max-width: 320px) {
             .header {
@@ -177,7 +215,7 @@
                 padding: 6px;
                 font-size: 12px;
             }
-            .city-selector select {
+            .city-selector select, .condition-selector select {
                 padding: 6px;
                 font-size: 12px;
             }
@@ -205,29 +243,53 @@
 <body>
     <div class="sidebar" id="sidebar">
         <button class="close-sidebar" onclick="closeSidebar()">Закрыть</button>
-        <div id="profile-section" class="sidebar-section">
-            <p>Функции личного кабинета в разработке</p>
+        <div id="search-section" class="sidebar-section">
+            <p>Функции поиска в разработке</p>
         </div>
         <div id="favorites-section" class="sidebar-section">
             <p>Функции избранного в разработке</p>
         </div>
-        <div id="menu-section" class="sidebar-section">
-            <p>Функции меню в разработке</p>
+        <div id="messages-section" class="sidebar-section">
+            <p>Функции сообщений в разработке</p>
         </div>
     </div>
     <div class="container">
+        <div class="top-bar">
+            <div class="icon" onclick="Telegram.WebApp.showAlert('Кошелек')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20 7h-1.3c-.4-1.6-1.8-3-3.7-3H9C7.1 4 5.7 5.4 5.3 7H4c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zm-5 2c.6 0 1 .4 1 1s-.4 1-1 1-1-.4-1-1 .4-1 1-1z"/>
+                </svg>
+                <span>Кошелек</span>
+            </div>
+            <div class="icon" onclick="Telegram.WebApp.showAlert('Магазины')">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21 4H3c-1.1 0-2 .9-2 2v13c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 13H4v-6h16v6zm0-8H4V6h16v3z"/>
+                </svg>
+                <span>Магазины</span>
+            </div>
+        </div>
         <div class="header">Part X</div>
         <div class="search-bar-container">
             <input type="text" class="search-bar" placeholder="Поиск товаров...">
         </div>
-        <div class="city-selector">
-            <select onchange="selectCity(this.value)">
-                <option value="" disabled selected>Выберите город</option>
-                <option value="Южно-Сахалинск">Южно-Сахалинск</option>
-                <option value="Корсаков">Корсаков</option>
-                <option value="Холмск">Холмск</option>
-                <option value="Долинск">Долинск</option>
-            </select>
+        <div class="filter-container">
+            <div class="city-selector">
+                <select onchange="selectCity(this.value)">
+                    <option value="" disabled selected>Все города</option>
+                    <option value="Южно-Сахалинск">Южно-Сахалинск</option>
+                    <option value="Корсаков">Корсаков</option>
+                    <option value="Холмск">Холмск</option>
+                    <option value="Долинск">Долинск</option>
+                </select>
+            </div>
+            <div class="condition-selector">
+                <select onchange="selectCondition(this.value)">
+                    <option value="" disabled selected>Все запчасти</option>
+                    <option value="Новые">Новые</option>
+                    <option value="Контрактные">Контрактные</option>
+                    <option value="Б/у">Б/у</option>
+                </select>
+            </div>
         </div>
         <div class="products-grid">
             <div class="product-card">
@@ -253,14 +315,29 @@
         </div>
     </div>
     <div class="bottom-menu">
-        <div class="menu-item" onclick="toggleSection('profile')">
-            <span>Личный кабинет</span>
+        <div class="menu-item" onclick="toggleSection('search')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 0 0 1.48-4.23c0-3.58-2.92-6.5-6.5-6.5s-6.5 2.92-6.5 6.5 2.92 6.5 6.5 6.5c1.59 0 3.04-.58 4.17-1.54l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <span>Поиск</span>
         </div>
         <div class="menu-item" onclick="toggleSection('favorites')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
             <span>Избранное</span>
         </div>
-        <div class="menu-item" onclick="toggleSection('menu')">
-            <span>Меню</span>
+        <div class="menu-item" onclick="toggleSection('messages')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/>
+            </svg>
+            <span>Сообщения</span>
+        </div>
+        <div class="menu-item" onclick="Telegram.WebApp.showAlert('Помощь')">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92c-.5.51-.86.97-1.04 1.69-.08.32-.13.68-.13 1.14h-2v-.5c0-.83.36-1.59.86-2.09l1.15-1.16c.31-.31.52-.76.52-1.25 0-.99-.81-1.8-1.8-1.8s-1.8.81-1.8 1.8H8c0-1.99 1.61-3.6 3.6-3.6s3.6 1.61 3.6 3.6c0 .66-.22 1.27-.61 1.75z"/>
+            </svg>
+            <span>Помощь</span>
         </div>
     </div>
 
@@ -268,16 +345,20 @@
     <script>
         Telegram.WebApp.ready();
         Telegram.WebApp.expand();
-        Telegram.WebApp.setHeaderColor('#2a2f33');
-        Telegram.WebApp.setBackgroundColor('#1c2526');
+        Telegram.WebApp.setHeaderColor('#1c1c1e');
+        Telegram.WebApp.setBackgroundColor('#000000');
 
         function selectCity(city) {
             Telegram.WebApp.showAlert(`Выбран город: ${city}`);
         }
 
+        function selectCondition(condition) {
+            Telegram.WebApp.showAlert(`Выбрано состояние: ${condition}`);
+        }
+
         function toggleSection(section) {
             const sidebar = document.getElementById('sidebar');
-            const sections = ['profile', 'favorites', 'menu'];
+            const sections = ['search', 'favorites', 'messages'];
             const isSidebarOpen = sidebar.classList.contains('active');
 
             sections.forEach(s => {
@@ -296,7 +377,7 @@
 
         function closeSidebar() {
             const sidebar = document.getElementById('sidebar');
-            const sections = ['profile', 'favorites', 'menu'];
+            const sections = ['search', 'favorites', 'messages'];
             sidebar.classList.remove('active');
             sections.forEach(s => {
                 const element = document.getElementById(`${s}-section`);
