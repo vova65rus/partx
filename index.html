@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Поиск запчастей</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
       font-family: sans-serif;
@@ -16,26 +17,25 @@
       margin: auto;
       text-align: center;
     }
-    <div class="filters">
-  <input type="text" id="searchInput" placeholder="Введите номер детали, кузов или авто">
-
-  <select id="citySelect">
-    <option value="">Все города</option>
-    <option value="Южно-Сахалинск">Южно-Сахалинск</option>
-    <option value="Холмск">Холмск</option>
-    <option value="Корсаков">Корсаков</option>
-  </select>
-
-  <label><input type="checkbox" id="inStockOnly"> Только в наличии</label>
-
-  <select id="sortSelect">
-    <option value="">Без сортировки</option>
-    <option value="price_asc">По цене ↑</option>
-    <option value="price_desc">По цене ↓</option>
-  </select>
-
-  <button onclick="searchParts()">🔍 Найти</button>
-</div>
+    .filters input,
+    .filters select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+    .filters label {
+      display: block;
+      margin-top: 8px;
+      text-align: left;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+    }
     #results {
       margin-top: 20px;
       text-align: left;
@@ -45,53 +45,91 @@
       padding: 12px;
       border-radius: 8px;
       margin-bottom: 10px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.05);
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
     }
     .card.premium {
       border-left: 5px solid gold;
     }
   </style>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
   <div class="container">
     <h2>🔧 Поиск автозапчастей</h2>
-    <input type="text" id="searchInput" placeholder="Введите номер детали, кузов или авто">
-    <button onclick="searchParts()">🔍 Найти</button>
+
+    <div class="filters">
+      <input type="text" id="searchInput" placeholder="Введите номер детали, кузов или авто" />
+
+      <select id="citySelect">
+        <option value="">Все города</option>
+        <option value="Южно-Сахалинск">Южно-Сахалинск</option>
+        <option value="Холмск">Холмск</option>
+        <option value="Корсаков">Корсаков</option>
+      </select>
+
+      <label><input type="checkbox" id="inStockOnly" /> Только в наличии</label>
+
+      <select id="sortSelect">
+        <option value="">Без сортировки</option>
+        <option value="price_asc">По цене ↑</option>
+        <option value="price_desc">По цене ↓</option>
+      </select>
+
+      <button onclick="searchParts()">🔍 Найти</button>
+    </div>
+
     <div id="results"></div>
   </div>
+
   <script>
     const tg = window.Telegram.WebApp;
     tg.expand();
 
     function searchParts() {
       const query = document.getElementById('searchInput').value.trim();
-      if (!query) return;
+      const city = document.getElementById('citySelect').value;
+      const inStockOnly = document.getElementById('inStockOnly').checked;
+      const sort = document.getElementById('sortSelect').value;
 
       document.getElementById('results').innerHTML = '⏳ Ищем...';
 
-      fetch(`https://script.google.com/macros/s/AKfycbxBtQU_L6UJZN1_SyXiTIxjZnOE-8eClEgOQQsE2fFzWuid21SX-1pxuxFhq2b_YyjS/exec?query=${encodeURIComponent(query)}`)
+      const url = `https://script.google.com/macros/s/ВАШ_ID_СКРИПТА/exec?query=${encodeURIComponent(query)}`;
+      fetch(url)
         .then(res => res.json())
         .then(data => {
+          let results = data;
+
+          // Фильтрация
+          if (city) {
+            results = results.filter(part => part.city === city);
+          }
+          if (inStockOnly) {
+            results = results.filter(part => part.availability.toLowerCase().includes('в наличии'));
+          }
+
+          // Сортировка
+          if (sort === 'price_asc') {
+            results = results.sort((a, b) => parseInt(a.price) - parseInt(b.price));
+          } else if (sort === 'price_desc') {
+            results = results.sort((a, b) => parseInt(b.price) - parseInt(a.price));
+          }
+
           const resultsDiv = document.getElementById('results');
           resultsDiv.innerHTML = '';
 
-          if (!data || data.length === 0) {
+          if (!results || results.length === 0) {
             resultsDiv.innerHTML = '😔 Ничего не найдено';
             return;
           }
 
-          data.forEach(part => {
+          results.forEach(part => {
             const card = document.createElement('div');
             card.className = 'card' + (part.premium ? ' premium' : '');
-
             card.innerHTML = `
               <strong>📦 ${part.name} (${part.part})</strong><br>
               🚗 ${part.model}, кузов: ${part.body}<br>
               💰 ${part.price}₽ — ${part.availability}<br>
               🏬 ${part.store} — ${part.city}<br>
             `;
-
             resultsDiv.appendChild(card);
           });
         });
